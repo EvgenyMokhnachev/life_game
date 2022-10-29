@@ -37,7 +37,6 @@ describe('LifeGround getNeiborhoodsCoords', () => {
         describe('Test get neiborhoods cell when main cell is on right border', () => {
             let lifeGround: LifeGround = new LifeGround(3, 3);
             let neiborhoodsCoords: Cell[] = lifeGround.getNeiborhoodsCoords(new Cell(2, 1));
-            console.log(neiborhoodsCoords);
 
             it('Should be found all neiborhoods cells around the cell', () => {
                 let cellsShouldBeFound = [

@@ -5,38 +5,44 @@ import Neiborhoods from "./Neiborhoods";
 class LifeGround {
     private w: number;
     private h: number;
-    private items: LifeItem[];
+    private items = new Map<number, Map<number, LifeItem>>;
 
     constructor(w?: number, h?: number) {
         this.w = w || undefined;
         this.h = h || undefined;
-        this.items = [];
-    }
-
-    public changeSize(w: number, h: number) {
-        this.w = w;
-        this.h = h;
-        let oldItems = [...this.items];
-        this.items = [];
-        oldItems.forEach((oldItem: LifeItem) => {
-            this.addItem(oldItem);
-        });
+        this.items = new Map<number, Map<number, LifeItem>>;
     }
 
     public getItems(): LifeItem[] {
-        return this.items;
+        let itemsResult: LifeItem[] = [];
+        for (let [x, yItemMap] of this.items) {
+            for (let [y, lifeItem] of yItemMap) {
+                itemsResult.push(lifeItem);
+            }
+        }
+        return itemsResult;
     }
 
     public addItem(item: LifeItem) {
         item.cell = this.normalizeCoords(item.cell);
 
-        let existsItem: LifeItem = this.items.find((gameItem: LifeItem) => item.cell.x === gameItem.cell.x && item.cell.y === gameItem.cell.y);
+        let existsItem: LifeItem = undefined;
 
-        // todo replace item instead of nothing do
+        let yItemMap = this.items.get(item.cell.x);
+        if (yItemMap) {
+            existsItem = yItemMap.get(item.cell.y);
+        }
+
         if (existsItem) {
             return;
         }
-        this.items.push(item);
+
+        if (!yItemMap) {
+            yItemMap = new Map<number, LifeItem>();
+            this.items.set(item.cell.x, yItemMap);
+        }
+
+        yItemMap.set(item.cell.y, item);
     }
 
     public normalizeCoords(coords: Cell): Cell {
@@ -72,8 +78,9 @@ class LifeGround {
         //         }
         let emptyCells: any = {};
 
-        for (let itemIndex in this.items) {
-            let lifeItem: LifeItem = this.items[itemIndex];
+        let items = this.getItems();
+        for (let itemIndex in items) {
+            let lifeItem: LifeItem = items[itemIndex];
             let neiborhoods = this.getNeiborhoods(lifeItem.cell);
 
             if (neiborhoods.lifeItems.length < 2 || neiborhoods.lifeItems.length > 3) {
@@ -103,9 +110,10 @@ class LifeGround {
 
         for (let itemToDieIndex in itemsToDie) {
             let itemToDie: LifeItem = itemsToDie[itemToDieIndex];
-            let indexToRemove = this.items.indexOf(itemToDie);
-            if (indexToRemove > -1) {
-                this.items.splice(indexToRemove, 1);
+            let yItemMap: Map<number, LifeItem> = this.items.get(itemToDie.cell.x);
+            yItemMap.delete(itemToDie.cell.y);
+            if (yItemMap.size == 0) {
+                this.items.delete(itemToDie.cell.x);
             }
         }
 
@@ -122,7 +130,15 @@ class LifeGround {
 
         for (let neiborhoodCoordIndex in neiborhoodsCoords) {
             let neiborhoodsCell: Cell = neiborhoodsCoords[neiborhoodCoordIndex];
-            let neiborhoodLifeItem = this.items.find(lifeItem => lifeItem.cell.equals(neiborhoodsCell));
+
+            let yItemMap: Map<number, LifeItem> = this.items.get(neiborhoodsCell.x);
+
+            let neiborhoodLifeItem = undefined;
+
+            if (yItemMap) {
+                neiborhoodLifeItem = yItemMap.get(neiborhoodsCell.y);
+            }
+
             if (neiborhoodLifeItem) {
                 neiborhoodLifeItems.push(neiborhoodLifeItem);
             } else {

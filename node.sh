@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker-compose run node "$@"
+docker-compose run --rm --service-ports node "$@"
