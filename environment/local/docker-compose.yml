@@ -1,0 +1,32 @@
+services:
+    webpack:
+        image: nodejs
+        build:
+            context: ./../../
+            dockerfile: ./environment/local/Dockerfile
+        volumes:
+            - ./../../:/app
+            - dist_volume:/dist
+        entrypoint: /entrypoint-copied.sh .
+
+    node:
+      image: nodejs
+      build:
+        context: ./../../
+        dockerfile: ./environment/local/Dockerfile
+      volumes:
+        - ./../../:/app
+
+    webserver:
+      logging:
+        driver: none
+      image: nginx:1.23-alpine
+      volumes:
+        - dist_volume:/usr/share/nginx/html
+      ports:
+        - 8080:80
+      depends_on:
+        - webpack
+
+volumes:
+    dist_volume:
