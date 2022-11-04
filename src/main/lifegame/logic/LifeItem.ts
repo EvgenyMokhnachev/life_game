@@ -8,6 +8,10 @@ class LifeItem {
     constructor(cell: Cell) {
         this.cell = cell;
     }
+
+    public static create(x: number, y: number): LifeItem {
+        return new LifeItem(new Cell(x, y));
+    }
 }
 
 export default LifeItem;

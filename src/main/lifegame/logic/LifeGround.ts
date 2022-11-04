@@ -6,11 +6,17 @@ class LifeGround {
     private w: number;
     private h: number;
     private items = new Map<number, Map<number, LifeItem>>;
+    private itemsCount: number;
 
     constructor(w?: number, h?: number) {
         this.w = w || undefined;
         this.h = h || undefined;
         this.items = new Map<number, Map<number, LifeItem>>;
+        this.itemsCount = 0;
+    }
+
+    public getItemsCount(): number {
+        return this.itemsCount + 0;
     }
 
     public getItems(): LifeItem[] {
@@ -21,6 +27,12 @@ class LifeGround {
             }
         }
         return itemsResult;
+    }
+
+    public addItems(items: LifeItem[]) {
+        for (let itemsIndex in items) {
+            this.addItem(items[itemsIndex]);
+        }
     }
 
     public addItem(item: LifeItem) {
@@ -43,6 +55,17 @@ class LifeGround {
         }
 
         yItemMap.set(item.cell.y, item);
+        this.itemsCount += 1;
+    }
+
+    public removeItem(item: LifeItem) {
+        let yItemMap: Map<number, LifeItem> = this.items.get(item.cell.x);
+        if (yItemMap.delete(item.cell.y)) {
+            this.itemsCount -= 1;
+        }
+        if (yItemMap.size == 0) {
+            this.items.delete(item.cell.x);
+        }
     }
 
     public normalizeCoords(coords: Cell): Cell {
@@ -110,11 +133,7 @@ class LifeGround {
 
         for (let itemToDieIndex in itemsToDie) {
             let itemToDie: LifeItem = itemsToDie[itemToDieIndex];
-            let yItemMap: Map<number, LifeItem> = this.items.get(itemToDie.cell.x);
-            yItemMap.delete(itemToDie.cell.y);
-            if (yItemMap.size == 0) {
-                this.items.delete(itemToDie.cell.x);
-            }
+            this.removeItem(itemToDie);
         }
 
         for (let itemsToBornIndex in itemsToBorn) {

@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 
-import Cell from '../main/lifegame/Cell';
-import LifeGround from '../main/lifegame/LifeGround';
-import LifeItem from '../main/lifegame/LifeItem';
+import Cell from '../main/lifegame/logic/Cell';
+import LifeGround from '../main/lifegame/logic/LifeGround';
+import LifeItem from '../main/lifegame/logic/LifeItem';
 
 describe('LifeGround Test', () => {
 

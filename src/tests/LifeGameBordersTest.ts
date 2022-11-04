@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 
-import Cell from '../main/lifegame/Cell';
-import LifeGround from '../main/lifegame/LifeGround';
-import LifeItem from '../main/lifegame/LifeItem';
+import Cell from '../main/lifegame/logic/Cell';
+import LifeGround from '../main/lifegame/logic/LifeGround';
+import LifeItem from '../main/lifegame/logic/LifeItem';
 
 describe('LifeGround Borders test', () => {
 
@@ -37,7 +37,7 @@ describe('LifeGround Borders test', () => {
 
             it('Count of cels should be 3', () => {
                 assert.equal(lifeGround.getItems().length, 3)
-            })
+            });
 
             it('New positions should be horisontal', () => {
                 let lifeCellsShouldBeFound = [
@@ -48,7 +48,7 @@ describe('LifeGround Borders test', () => {
                 let lifeCellsFound = lifeCellsShouldBeFound.filter(cell => lifeGround.getItems().find((item: LifeItem) => item.cell.equals(cell)));
                 assert.equal(lifeCellsFound.length, lifeCellsShouldBeFound.length);
             })
-        })
+        });
 
         /*     0   1   2   3   4   5   6
         *  0  [X] [ ] [ ] [ ] [ ] [ ] [ ]
@@ -65,7 +65,7 @@ describe('LifeGround Borders test', () => {
 
             it('Count of cels should be 3', () => {
                 assert.equal(lifeGround.getItems().length, 3)
-            })
+            });
 
             it('New positions should be vertical', () => {
                 let lifeCellsShouldBeFound = [
@@ -110,7 +110,7 @@ describe('LifeGround Borders test', () => {
 
             it('Count of cels should be 3', () => {
                 assert.equal(lifeGround.getItems().length, 3)
-            })
+            });
 
             it('New positions should be vertical', () => {
                 let lifeCellsShouldBeFound = [
@@ -121,7 +121,7 @@ describe('LifeGround Borders test', () => {
                 let lifeCellsFound = lifeCellsShouldBeFound.filter(cell => lifeGround.getItems().find((item: LifeItem) => item.cell.equals(cell)));
                 assert.equal(lifeCellsFound.length, lifeCellsShouldBeFound.length);
             })
-        })
+        });
 
         /*     0   1   2   3   4   5   6
         *  0  [ ] [ ] [ ] [ ] [ ] [ ] [ ]
@@ -138,7 +138,7 @@ describe('LifeGround Borders test', () => {
 
             it('Count of cels should be 3', () => {
                 assert.equal(lifeGround.getItems().length, 3)
-            })
+            });
 
             it('New positions should be horizontal', () => {
                 let lifeCellsShouldBeFound = [

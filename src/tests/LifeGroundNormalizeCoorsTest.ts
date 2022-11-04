@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
-import Cell from '../main/lifegame/Cell';
-import LifeGround from '../main/lifegame/LifeGround';
+import Cell from '../main/lifegame/logic/Cell';
+import LifeGround from '../main/lifegame/logic/LifeGround';
 
 describe('LifeGround.normalizeCoords', () => {
 

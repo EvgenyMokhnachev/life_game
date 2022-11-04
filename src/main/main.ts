@@ -1,74 +1,147 @@
-import Cell from "./lifegame/Cell";
-import LifeGround from "./lifegame/LifeGround";
-import LifeItem from "./lifegame/LifeItem";
+import Cell from "./lifegame/logic/Cell";
+import LifeGround from "./lifegame/logic/LifeGround";
+import LifeItem from "./lifegame/logic/LifeItem";
+import LifeGameTimeProcessor from "./lifegame/environment/LifeGameTimeProcessor";
 
 let lifeGround = new LifeGround();
-lifeGround.addItem(new LifeItem(new Cell(2+12, 3+12)));
-lifeGround.addItem(new LifeItem(new Cell(3+12, 4+12)));
-lifeGround.addItem(new LifeItem(new Cell(4+12, 2+12)));
-lifeGround.addItem(new LifeItem(new Cell(4+12, 3+12)));
-lifeGround.addItem(new LifeItem(new Cell(4+12, 4+12)));
 
-lifeGround.addItem(new LifeItem(new Cell(2, 0)));
-lifeGround.addItem(new LifeItem(new Cell(3, 0)));
-lifeGround.addItem(new LifeItem(new Cell(4, 0)));
-lifeGround.addItem(new LifeItem(new Cell(8, 0)));
-lifeGround.addItem(new LifeItem(new Cell(9, 0)));
-lifeGround.addItem(new LifeItem(new Cell(10, 0)));
+// lifeGround.addItems([
+//     LifeItem.create(2+12, 3+12),
+//     LifeItem.create(3+12, 4+12),
+//     LifeItem.create(4+12, 2+12),
+//     LifeItem.create(4+12, 3+12),
+//     LifeItem.create(4+12, 4+12)
+// ]);
 
-lifeGround.addItem(new LifeItem(new Cell(0, 2)));
-lifeGround.addItem(new LifeItem(new Cell(5, 2)));
-lifeGround.addItem(new LifeItem(new Cell(7, 2)));
-lifeGround.addItem(new LifeItem(new Cell(12, 2)));
+lifeGround.addItems(centraliseObject(generate30P5H2V0()));
 
-lifeGround.addItem(new LifeItem(new Cell(0, 3)));
-lifeGround.addItem(new LifeItem(new Cell(5, 3)));
-lifeGround.addItem(new LifeItem(new Cell(7, 3)));
-lifeGround.addItem(new LifeItem(new Cell(12, 3)));
+function centraliseObject(items: LifeItem[]): LifeItem[] {
+    let minX = 0;
+    let maxX = 0;
 
-lifeGround.addItem(new LifeItem(new Cell(0, 4)));
-lifeGround.addItem(new LifeItem(new Cell(5, 4)));
-lifeGround.addItem(new LifeItem(new Cell(7, 4)));
-lifeGround.addItem(new LifeItem(new Cell(12, 4)));
+    let minY = 0;
+    let maxY = 0;
 
-lifeGround.addItem(new LifeItem(new Cell(2, 5)));
-lifeGround.addItem(new LifeItem(new Cell(3, 5)));
-lifeGround.addItem(new LifeItem(new Cell(4, 5)));
-lifeGround.addItem(new LifeItem(new Cell(8, 5)));
-lifeGround.addItem(new LifeItem(new Cell(9, 5)));
-lifeGround.addItem(new LifeItem(new Cell(10, 5)));
+    items.forEach((item: LifeItem) => {
+        if (item.cell.x > maxX) {
+            maxX = item.cell.x
+        }
 
-lifeGround.addItem(new LifeItem(new Cell(2, 12)));
-lifeGround.addItem(new LifeItem(new Cell(3, 12)));
-lifeGround.addItem(new LifeItem(new Cell(4, 12)));
-lifeGround.addItem(new LifeItem(new Cell(8, 12)));
-lifeGround.addItem(new LifeItem(new Cell(9, 12)));
-lifeGround.addItem(new LifeItem(new Cell(10, 12)));
+        if (item.cell.x < minX) {
+            minX = item.cell.x
+        }
 
-lifeGround.addItem(new LifeItem(new Cell(0, 10)));
-lifeGround.addItem(new LifeItem(new Cell(5, 10)));
-lifeGround.addItem(new LifeItem(new Cell(7, 10)));
-lifeGround.addItem(new LifeItem(new Cell(12, 10)));
+        if (item.cell.y > maxY) {
+            maxY = item.cell.y
+        }
 
-lifeGround.addItem(new LifeItem(new Cell(0, 9)));
-lifeGround.addItem(new LifeItem(new Cell(5, 9)));
-lifeGround.addItem(new LifeItem(new Cell(7, 9)));
-lifeGround.addItem(new LifeItem(new Cell(12, 9)));
+        if (item.cell.y < minY) {
+            minY = item.cell.y
+        }
+    });
 
-lifeGround.addItem(new LifeItem(new Cell(0, 8)));
-lifeGround.addItem(new LifeItem(new Cell(5, 8)));
-lifeGround.addItem(new LifeItem(new Cell(7, 8)));
-lifeGround.addItem(new LifeItem(new Cell(12, 8)));
+    let centerX = Math.round((minX + maxX) / 2);
+    let centerY = Math.round((minY + maxY) / 2);
 
-lifeGround.addItem(new LifeItem(new Cell(2, 7)));
-lifeGround.addItem(new LifeItem(new Cell(3, 7)));
-lifeGround.addItem(new LifeItem(new Cell(4, 7)));
-lifeGround.addItem(new LifeItem(new Cell(8, 7)));
-lifeGround.addItem(new LifeItem(new Cell(9, 7)));
-lifeGround.addItem(new LifeItem(new Cell(10, 7)));
+    return items.map(item => {
+        let itemCell = new Cell(item.cell.x, item.cell.y);
+        itemCell.x = itemCell.x - centerX;
+        itemCell.y = itemCell.y - centerY;
+        item.cell = itemCell;
+        return item;
+    });
+}
 
+function positionObject(items: LifeItem[], x: number, y: number) {
+    return items.map(item => {
+        item.cell.x += x;
+        item.cell.y += y;
+        return item;
+    })
+}
 
+function generate30P5H2V0(): LifeItem[] {
+    return [
+        LifeItem.create(0, 5),
+        LifeItem.create(0, 6),
 
+        LifeItem.create(1, 4),
+        LifeItem.create(1, 5),
+        LifeItem.create(1, 6),
+
+        LifeItem.create(2, 2),
+
+        LifeItem.create(3, 1),
+        LifeItem.create(3, 2),
+        LifeItem.create(3, 4),
+
+        LifeItem.create(4, 0),
+        LifeItem.create(4, 1),
+
+        LifeItem.create(5, 1),
+        LifeItem.create(5, 2),
+        LifeItem.create(5, 4),
+        LifeItem.create(5, 5),
+        LifeItem.create(5, 6),
+
+        LifeItem.create(6, 2),
+
+        LifeItem.create(7, 4),
+
+        LifeItem.create(8, 8),
+
+        LifeItem.create(9, 5),
+        LifeItem.create(9, 9),
+
+        LifeItem.create(10, 4),
+        LifeItem.create(10, 5),
+        LifeItem.create(10, 7),
+        LifeItem.create(10, 8),
+
+        LifeItem.create(11, 5),
+
+        LifeItem.create(12, 6),
+        LifeItem.create(12, 7),
+        LifeItem.create(12, 9),
+        LifeItem.create(12, 10),
+    ];
+}
+
+function generateInfinitySquare(): LifeItem[] {
+    return [
+        LifeItem.create(0, 0),
+        LifeItem.create(1, 0),
+        LifeItem.create(2, 0),
+        LifeItem.create(3, 0),
+        LifeItem.create(4, 0),
+
+        LifeItem.create(0, 1),
+        LifeItem.create(1, 1),
+        LifeItem.create(2, 1),
+        LifeItem.create(3, 1),
+        LifeItem.create(4, 1),
+
+        LifeItem.create(0, 2),
+        LifeItem.create(1, 2),
+
+        LifeItem.create(2, 2),
+
+        LifeItem.create(3, 2),
+        LifeItem.create(4, 2),
+
+        LifeItem.create(0, 3),
+        LifeItem.create(1, 3),
+        LifeItem.create(2, 3),
+        LifeItem.create(3, 3),
+        LifeItem.create(4, 3),
+
+        LifeItem.create(0, 4),
+        LifeItem.create(1, 4),
+        LifeItem.create(2, 4),
+        LifeItem.create(3, 4),
+        LifeItem.create(4, 4),
+    ];
+}
 
 
 let canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -82,8 +155,8 @@ document.body.style.overflow = 'hidden';
 document.body.appendChild(canvas);
 
 const itemSize = 4;
-let cameraOffsetX = Math.floor(canvas.width/2);
-let cameraOffsetY = Math.floor(canvas.height/2);
+let cameraOffsetX = Math.floor(canvas.width / 2);
+let cameraOffsetY = Math.floor(canvas.height / 2);
 let cameraZoomPercents = 100;
 
 function render() {
@@ -105,11 +178,22 @@ function render() {
     });
 }
 
+let lifeGameTimeProcessor = new LifeGameTimeProcessor(lifeGround);
+lifeGameTimeProcessor.start();
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+        lifeGameTimeProcessor.pause();
+    } else {
+        lifeGameTimeProcessor.unpause();
+    }
+});
+
 function processFrame() {
     render();
-    lifeGround.processIteration();
     window.requestAnimationFrame(processFrame);
 }
+
 processFrame();
 
 function moveCameraX(diff: number) {
@@ -128,39 +212,72 @@ function zoomCamera(diffPercents: number) {
 }
 
 function generateMoreLife() {
-    for (let j = 0; j < 10; j++) {
-        for (let i = 0; i < 1000; i++) {
-            lifeGround.addItem(new LifeItem(new Cell(
-                Math.round(250*Math.random()) * (Math.random() > 0.5 ? 1 : -1),
-                Math.round(250*Math.random()) * (Math.random() > 0.5 ? 1 : -1)
-            )));
+    let itemSizeZoommed = itemSize * (cameraZoomPercents / 100);
+
+    for (let x = 0; x < Math.floor(canvas.width / itemSizeZoommed); x += 1) {
+        for (let y = 0; y < Math.floor(canvas.height / itemSizeZoommed); y += 1) {
+            if ((Math.random() > 0.999)) {
+                positionObject(
+                    centraliseObject(
+                        generate30P5H2V0()
+                    ),
+                    Math.round(x - (cameraOffsetX / itemSizeZoommed)),
+                    Math.round(y - (cameraOffsetY / itemSizeZoommed))
+                ).forEach(itemSize => {
+                    lifeGround.addItem(itemSize);
+                });
+                // lifeGround.addItem(LifeItem.create(
+                //     x - (cameraOffsetX / itemSizeZoommed),
+                //     y - (cameraOffsetY / itemSizeZoommed)
+                // ));
+            }
         }
     }
+
+    // for (let j = 0; j < 10; j++) {
+    //     for (let i = 0; i < 1000; i++) {
+    //         lifeGround.addItem(LifeItem.create(
+    //             Math.round(250*Math.random()) * (Math.random() > 0.5 ? 1 : -1),
+    //             Math.round(250*Math.random()) * (Math.random() > 0.5 ? 1 : -1)
+    //         ));
+    //     }
+    // }
 }
 
 window.onkeyup = (e) => {
     switch (e.code) {
         case 'ArrowLeft': {
             moveCameraX(120);
-        } break;
+        }
+            break;
         case 'ArrowRight': {
             moveCameraX(-120);
-        } break;
+        }
+            break;
         case 'ArrowUp': {
             moveCameraY(120);
-        } break;
+        }
+            break;
         case 'ArrowDown': {
             moveCameraY(-120);
-        } break;
+        }
+            break;
         case 'Equal': {
             zoomCamera(10);
-        } break;
+        }
+            break;
         case 'Minus': {
             zoomCamera(-10);
-        } break;
+        }
+            break;
         case 'Space': {
             generateMoreLife();
-        } break;
+        }
+            break;
+        case 'KeyP': {
+            lifeGameTimeProcessor.pauseToggle();
+        }
+            break;
         default: {
             console.log(e.code);
         }
