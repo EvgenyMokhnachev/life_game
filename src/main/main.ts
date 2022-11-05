@@ -11,10 +11,12 @@ import LifeObjectPulsar3 from "./lifegame/objects/LifeObjectPulsar3";
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+canvas.style.cursor = 'none';
+document.body.appendChild(canvas);
+
 document.body.style.margin = '0px';
 document.body.style.height = '100%';
 document.body.style.overflow = 'hidden';
-document.body.appendChild(canvas);
 
 const lifeGround = new LifeGround();
 // lifeGround.addItems(new Object30P5H2V0().centralise().getItems());

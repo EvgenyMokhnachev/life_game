@@ -51,6 +51,20 @@ class LifeGameRender {
         this.lifeGround.addItems(new LifeObjectCell().move(xGamePosition, yGamePosition).getItems());
     }
 
+    private calculateItemSizeZoomed(zoomPercents: number): number {
+        return Math.ceil(this.itemSize * (zoomPercents / 100));
+    }
+
+    public render() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.cellHoverRender();
+        this.renderGameItems();
+        this.renderLines();
+
+        this.lastRequestAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
+    }
+
     private cellHoverRender() {
         if (!this.cellHoverX || !this.cellHoverY) {
             return;
@@ -63,22 +77,9 @@ class LifeGameRender {
             this.itemSizeZoomed,
             this.itemSizeZoomed
         );
+        this.ctx.fillStyle = '#b0b0b0';
         this.ctx.fill();
         this.ctx.closePath();
-    }
-
-    private calculateItemSizeZoomed(zoomPercents: number): number {
-        return Math.ceil(this.itemSize * (zoomPercents / 100));
-    }
-
-    public render() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.renderGameItems();
-        this.cellHoverRender();
-        this.renderLines();
-
-        this.lastRequestAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
     }
 
     private renderGameItems() {
@@ -91,6 +92,7 @@ class LifeGameRender {
                 this.itemSizeZoomed
             );
         });
+        this.ctx.fillStyle = '#101010';
         this.ctx.fill();
         this.ctx.closePath();
     }
