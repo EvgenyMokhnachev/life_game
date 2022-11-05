@@ -9,7 +9,7 @@ class LifeGameTimeProcessor {
 
     constructor(lifeGround: LifeGround) {
         this.lifeGround = lifeGround;
-        this.speed = 10;
+        this.speed = 4;
         this.pauseTime = undefined;
         this.lastIteration = Date.now();
         this.lastRequestAnimationFrame = undefined;

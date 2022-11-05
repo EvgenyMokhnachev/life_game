@@ -36,6 +36,7 @@ class LifeGround {
     }
 
     public addItem(item: LifeItem) {
+        // if (this.itemsCount > 10000) return;
         item.cell = this.normalizeCoords(item.cell);
 
         let existsItem: LifeItem = undefined;
@@ -60,6 +61,7 @@ class LifeGround {
 
     public removeItem(item: LifeItem) {
         let yItemMap: Map<number, LifeItem> = this.items.get(item.cell.x);
+        if (!yItemMap) return;
         if (yItemMap.delete(item.cell.y)) {
             this.itemsCount -= 1;
         }
