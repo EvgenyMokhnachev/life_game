@@ -7,6 +7,8 @@ import LifeObject30P5H2V0 from "./lifegame/objects/LifeObject30P5H2V0";
 import LifeObjectGlider from "./lifegame/objects/LifeObjectGlider";
 import LifeObjectStaticPulsar from "./lifegame/objects/LifeObjectStaticPulsar";
 import LifeObjectPulsar3 from "./lifegame/objects/LifeObjectPulsar3";
+import CanvasRenderer from "./render/CanvasRenderer";
+import LifeGameHUDRender from "./lifegame/render/LifeGameHUDRender";
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 canvas.width = window.innerWidth;
@@ -24,8 +26,12 @@ const lifeGround = new LifeGround();
 // lifeGround.addItems(new LifeObjectStaticPulsar().centralise().getItems());
 lifeGround.addItems(new LifeObjectPulsar3().centralise().getItems());
 
-const lifeGameRender = new LifeGameRender(lifeGround, canvas);
-lifeGameRender.render();
+const canvasRenderer = new CanvasRenderer(canvas);
+canvasRenderer.render();
+
+const lifeGameRender = new LifeGameRender(lifeGround, canvasRenderer);
+
+const lifeGameHUDRender = new LifeGameHUDRender(canvasRenderer);
 
 const lifeGameTimeProcessor = new LifeGameTimeProcessor(lifeGround);
 lifeGameTimeProcessor.start();

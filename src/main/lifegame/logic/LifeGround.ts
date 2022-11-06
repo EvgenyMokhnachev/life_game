@@ -3,16 +3,30 @@ import LifeItem from "./LifeItem";
 import Neiborhoods from "./Neiborhoods";
 
 class LifeGround {
+    private iteration: number = 0;
     private w: number;
     private h: number;
     private items = new Map<number, Map<number, LifeItem>>;
     private itemsCount: number;
+
+    private onIterationEventsSequence: number = 0;
+    private onIterationEvents: Map<number, Function> = new Map<number, Function>();
 
     constructor(w?: number, h?: number) {
         this.w = w || undefined;
         this.h = h || undefined;
         this.items = new Map<number, Map<number, LifeItem>>;
         this.itemsCount = 0;
+    }
+
+    public onIteration(callback: Function) {
+        let sequenceIndex: number = this.onIterationEventsSequence++;
+        this.onIterationEvents.set(sequenceIndex, callback);
+        return sequenceIndex;
+    }
+
+    public getIterationCount(): number {
+        return this.iteration;
     }
 
     public getItemsCount(): number {
@@ -142,6 +156,11 @@ class LifeGround {
             let itemToBorn: LifeItem = itemsToBorn[itemsToBornIndex];
             this.addItem(itemToBorn);
         }
+
+        let currentIteration = this.iteration++;
+        this.onIterationEvents.forEach((callback: Function) => {
+            callback(currentIteration);
+        })
     }
 
     private getNeiborhoods(cel: Cell): Neiborhoods {
