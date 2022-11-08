@@ -56,29 +56,67 @@ export default class {
     public addItem(item: CanvasItem): number {
         let index = ++this.itemsSequence;
         this.items.set(index, item);
+        this.processRenderItems();
         return index;
     }
 
     public removeItem(indexOfSequence: number) {
         this.items.delete(indexOfSequence);
+        this.processRenderItems();
+    }
+
+    private zIndexesForRender: number[] = [];
+    private zIndexesForRenderMap: Map<number, CanvasItem[]> = new Map<number, CanvasItem[]>();
+
+    private processRenderItems() {
+        this.zIndexesForRender = [];
+        this.zIndexesForRenderMap = new Map<number, CanvasItem[]>();
+
+        this.items.forEach((item: CanvasItem) => {
+            let itemZIndex = item.zIndex;
+            let canvasItems = this.zIndexesForRenderMap.get(itemZIndex);
+            if (itemZIndex === undefined || itemZIndex === null) {
+                itemZIndex = 0;
+            }
+            if (!canvasItems) {
+                canvasItems = [];
+                this.zIndexesForRenderMap.set(itemZIndex, canvasItems);
+            }
+            canvasItems.push(item);
+
+            if (this.zIndexesForRender.indexOf(itemZIndex) < 0) {
+                this.zIndexesForRender.push(itemZIndex);
+            }
+        });
+
+        this.zIndexesForRender = this.zIndexesForRender.sort((a, b) => {
+            if (a === b) return 0;
+            if (a > b) return 1;
+            if (a < b) return -1;
+        });
     }
 
     public render() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let zIndex of this.zIndexesForRender) {
+            let canvasItems = this.zIndexesForRenderMap.get(zIndex);
+            for (let canvasItem of canvasItems) {
+                if (
+                    (canvasItem.x + canvasItem.width < 0) ||
+                    (canvasItem.x > this.canvas.width) ||
+                    (canvasItem.y + canvasItem.height < 0) ||
+                    (canvasItem.y > this.canvas.height)
+                ) {
+                    continue;
+                }
+
+                canvasItem.render(this.ctx);
+            }
+        }
+
         this.onRenderEvents.forEach((callback: Function) => callback());
 
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.items.forEach((item: CanvasItem) => {
-            if (
-                (item.x + item.width < 0) ||
-                (item.x > this.canvas.width) ||
-                (item.y + item.height < 0) ||
-                (item.y > this.canvas.height)
-            ) {
-                return;
-            }
-
-            item.render(this.ctx);
-        });
         this.lastRequestAnimationFrame = window.requestAnimationFrame(this.render.bind(this));
     }
 

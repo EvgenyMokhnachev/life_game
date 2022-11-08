@@ -1,11 +1,6 @@
-import CanvasItem from "./CanvasItem";
+import CanvasItem from "../CanvasItem";
 
-export default class Square implements CanvasItem {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-
+export default class Square extends CanvasItem {
     x1: number;
     y1: number;
 
@@ -13,12 +8,13 @@ export default class Square implements CanvasItem {
     lineWidth: number;
 
     constructor(x0: number, y0: number, x1: number, y1: number, strokeStyle: string, lineWidth: number) {
-        this.x = x0;
-        this.y = y0;
+        super(
+            x0, y0,
+            x0 > x1 ? x0 : x1,
+            y0 > y1 ? y0 : y1
+        );
         this.x1 = x1;
         this.y1 = y1;
-        this.width = x0 > x1 ? x0 : x1;
-        this.height = y0 > y1 ? y0 : y1;
         this.strokeStyle = strokeStyle;
         this.lineWidth = lineWidth;
     }

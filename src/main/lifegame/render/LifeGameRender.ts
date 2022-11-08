@@ -2,8 +2,8 @@ import LifeItem from "../logic/LifeItem";
 import LifeGround from "../logic/LifeGround";
 import LifeObjectCell from "../objects/LifeObjectCell";
 import CanvasRenderer from "../../render/CanvasRenderer";
-import Rect from "../../render/Rect";
-import Line from "../../render/Line";
+import Rect from "../../render/simple/Rect";
+import Line from "../../render/simple/Line";
 
 export default class {
     private renderer: CanvasRenderer;

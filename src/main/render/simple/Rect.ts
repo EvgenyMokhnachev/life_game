@@ -1,19 +1,11 @@
-import CanvasItem from "./CanvasItem";
+import CanvasItem from "../CanvasItem";
 
-export default class Rect implements CanvasItem {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-
+export default class Rect extends CanvasItem {
     fillStyle: string;
     borderRadius: number = 0;
 
     constructor(x: number, y: number, width: number, height: number) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
     }
 
     public setFillStyle(fillStyle: string): Rect {
